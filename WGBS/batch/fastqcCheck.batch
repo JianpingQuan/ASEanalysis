@@ -1,0 +1,25 @@
+#!/bin/bash
+#BATCH --job-name=fastqc_check_sequencing_quality
+#
+#Tasks per node:
+#SBATCH --ntasks-per-node=1
+#
+#Processors per task:
+#SBATCH --cpus-per-task=8
+#
+#Memory per node:
+#SBATCH --mem=260G
+#
+#Wall time:
+#SBATCH --time=4:00:00
+#
+#Standard out and error
+#SBATCH --output=%x-%j.SLURMout
+echo "SLURM_NTASKS: $SLURM_NTASKS"
+echo "SLURM_CPUS_ON_NODE: $SLURM_CPUS_ON_NODE"
+echo "JobStarted" `date`""
+
+
+/mnt/home/quanjian/software/FastQC/fastqc -t 8 -o /mnt/scratch/quanjian/BS/qualityCheck/ /mnt/gs18/scratch/users/huangw53/jianping-seq/诺和致远数据第一部分/Raw/rawdata/DB70M_B1_1.fq.gz /mnt/gs18/scratch/users/huangw53/jianping-seq/诺和致远数据第一部分/Raw/rawdata/DB70M_B1_2.fq.gz 
+
+echo "JobEnd" `date`""
