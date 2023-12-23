@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Job name:
+#SBATCH --job-name=gatk_BaseRecalibrator_bam_from_markDuplicates
+#
+# Number of nodes needed for use case:
+#SBATCH --nodes=1
+#
+#Tasks per node based on number of cores per node:
+#SBATCH --ntasks-per-node=1
+#
+#Processors per task:
+#SBATCH --cpus-per-task=2
+#
+#Memory per node:
+#SBATCH --mem=40G
+#
+#Wall clock limit (one of "minutes","minutes:seconds","hours:minutes:seconds","days-hours","days-hours:minutes" and "days-hours:minutes:seconds"):
+#SBATCH --time=4:00:00
+#
+#Standard out and error
+#SBATCH --output=%x-%j.SLURMout
+
+echo "SLURM_NTASKS: $SLURM_NTASKS"
+echo "SLURM_CPUS_ON_NODE: $SLURM_CPUS_ON_NODE"
+echo "JobStarted" `date`""
+
+java -jar /mnt/research/qgg/software/gatk-4.1.1.0/gatk-package-4.1.1.0-local.jar BaseRecalibrator \
+--input /mnt/scratch/quanjian/RNA_seq/markDuplicates/$sample.alg.mark.bam \
+--reference /mnt/home/quanjian/quan/Cross/ref/Sus_scrofa.Sscrofa11.1.dna_sm.toplevel.fa \
+--known-sites /mnt/home/quanjian/quan/Cross/release-98-variantion-vcf-pig/sus_scrofa.vcf \
+--output /mnt/scratch/quanjian/RNA_seq/GATK/BaseRecalibrator/$sample.baseRecalibrator.table 2> /mnt/home/quanjian/quan/RNA/log/gatk/baseRecalibrator/$sample.BQSR.log
+
+sacct -j $SLURM_JOB_ID --units=G -P --format="Account%15,JobID,JobName%15,CPUTime,Elapsed,MaxRSS,Start,End,NodeList,NTasks,Partition%20,NCPUS,state"
+
+echo "JobEnd" `date`""

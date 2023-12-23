@@ -1,0 +1,19 @@
+#!/bin/bash
+#BATCH --job-name=hisat2_align_pairdReads
+#
+#Tasks per node:
+#SBATCH --ntasks-per-node=1
+#
+#Processors per task:
+#SBATCH --cpus-per-task=6
+#
+#Memory per node:
+#SBATCH --mem=200G
+#
+#Wall time:
+#SBATCH --time=12:00:00
+#
+#Standard out and error
+#SBATCH --output=%x-%j.SLURMout
+cd /mnt/scratch/quanjian/RNA_seq/oriAlignment
+/mnt/home/quanjian/software/subread-2.0.3-Linux-x86_64/bin/featureCounts -T 6 -a /mnt/ufs18/home-081/quanjian/resources/Sus_scrofa.Sscrofa11.1.98.gtf -o /mnt/scratch/quanjian/RNA_seq/oriAlignment/read.count -p -B -C -t exon -g gene_id /mnt/scratch/quanjian/RNA_seq/oriAlignment/*/*.ori.align.reDup.bam

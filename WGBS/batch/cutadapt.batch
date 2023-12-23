@@ -1,0 +1,24 @@
+#!/bin/bash
+#BATCH --job-name=cutadapt
+#
+#Tasks per node:
+#SBATCH --ntasks-per-node=1
+#
+#Processors per task:
+#SBATCH --cpus-per-task=12
+#
+#Memory per node:
+#SBATCH --mem=80G
+#
+#Wall time:
+#SBATCH --time=4:00:00
+#
+#Standard out and error
+#SBATCH --output=%x-%j.SLURMout
+echo "SLURM_NTASKS: $SLURM_NTASKS"
+echo "SLURM_CPUS_ON_NODE: $SLURM_CPUS_ON_NODE"
+echo "JobStarted" `date`""
+
+/mnt/ufs18/home-081/quanjian/software/cutadapt-2.10/cutadapt -j 12 -q 20 -m 50 -a GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -A AGATCGGAAGAGCGTCGTGTAGGGAAAGA -o /mnt/scratch/quanjian/BS/adaptTrimmed/"$sample"_1_trimmed.fq.gz -p /mnt/scratch/quanjian/BS/adaptTrimmed/"$sample"_2_trimmed.fq.gz "$r1" "$r2"
+
+echo "JobEnd" `date`""

@@ -1,0 +1,30 @@
+#!/bin/bash
+#BATCH --job-name=statistic_mapping_result
+#
+#Tasks per node:
+#SBATCH --ntasks-per-node=1
+#
+#Processors per task:
+#SBATCH --cpus-per-task=2
+#
+#Memory per node:
+#SBATCH --mem=32G
+#
+#Wall time:
+#SBATCH --time=2:00:00
+#
+#Standard out and error
+#SBATCH --output=%x-%j.SLURMout
+
+samtools index -b /mnt/scratch/quanjian/ATAC/Ori_markduplicate/BWA_based/"$sample"_OriRef.ReDup.NoMT.Unique.bam
+
+bamCoverage -p 2 --normalizeUsing RPKM --binSize 50 -b /mnt/scratch/quanjian/ATAC/Ori_markduplicate/BWA_based/"$sample"_OriRef.ReDup.NoMT.Unique.bam -o /mnt/scratch/quanjian/ATAC/analysis/bamCoverage/"$sample"_OriRef.ReDup.NoMT.Unique.bw 2> /mnt/home/quanjian/quan/ATAC/log/deeptools_BamTobw/"$sample"_OriRef.ReDup.NoMT.Unique.bamTobw.log
+
+computeMatrix reference-point --referencePoint TSS -p 2 -R /mnt/ufs18/home-081/quanjian/resources/Sus_scrofa.Sscrofa11.1.98.gtf -S /mnt/scratch/quanjian/ATAC/analysis/bamCoverage/"$sample"_OriRef.ReDup.NoMT.Unique.bw --beforeRegionStartLength 2000 --afterRegionStartLength 2000 --missingDataAsZero -o /mnt/scratch/quanjian/ATAC/analysis/computeMatrix/"$sample"_OriRef.Point.Matrix.gz 2> /mnt/home/quanjian/quan/ATAC/log/deeptools_computeMatrix/"$sample"_OriRef.Point.compMatrix.log
+
+
+plotHeatmap -m /mnt/scratch/quanjian/ATAC/analysis/computeMatrix/"$sample"_OriRef.Point.Matrix.gz -out /mnt/scratch/quanjian/ATAC/analysis/plotHeatmap/"$sample"_OriRef.Point_heatmap.pdf --colorMap YlGn --whatToShow 'heatmap and colorbar' --samplesLabel "$sample" --plotFileFormat pdf --heatmapHeight 6  --heatmapWidth 6
+
+#plotProfile -m /mnt/scratch/quanjian/ATAC/analysis/computeMatrix/"$sample"_OriRef.Point.Matrix.gz -out /mnt/scratch/quanjian/ATAC/analysis/plotHeatmap/"$sample".Point_lineProfile.pdf --samplesLabel "$sample" --plotType lines --startLabel TSS --endLabel TES --plotFileFormat pdf  --plotHeight 10 --plotWidth 16 --yAxisLabel "Reads Density" --perGroup
+
+#plotProfile -m /mnt/scratch/quanjian/ATAC/analysis/computeMatrix/"$sample"_OriRef.Region.Matrix.gz -out /mnt/scratch/quanjian/ATAC/analysis/plotHeatmap/"$sample".Region_lineProfile.pdf --samplesLabel "$sample" --plotType lines --startLabel TSS --endLabel TES --plotFileFormat pdf  --plotHeight 10 --plotWidth 16 --yAxisLabel "Reads Density" --perGroup

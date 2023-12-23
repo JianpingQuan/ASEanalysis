@@ -1,0 +1,19 @@
+#!/bin/bash
+#BATCH --job-name=Modified_genome_Hisat2-build_index
+#
+#Tasks per node:
+#SBATCH --ntasks-per-node=1
+#
+#Processors per task:
+#SBATCH --cpus-per-task=6
+#
+#Memory per node:
+#SBATCH --mem=10G
+#
+#Wall time:
+#SBATCH --time=2:00:00
+#
+#Standard out and error
+#SBATCH --output=%x-%j.SLURMout
+
+/mnt/home/quanjian/software/FastQC/fastqc -o /mnt/scratch/quanjian/ATAC/preprocess/fastqc/ /mnt/scratch/quanjian/ATAC/rawdata/"$sample"_R1.fastq.gz /mnt/scratch/quanjian/ATAC/rawdata/"$sample"_R2.fastq.gz

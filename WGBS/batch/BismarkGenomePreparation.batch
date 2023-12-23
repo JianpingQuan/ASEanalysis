@@ -1,0 +1,27 @@
+#!/bin/bash
+#BATCH --job-name=bismark_genome_preparation
+#
+#Tasks per node:
+#SBATCH --ntasks-per-node=1
+#
+#Processors per task:
+#SBATCH --cpus-per-task=4
+#
+#Memory per node:
+#SBATCH --mem=320G
+#
+#Wall time:
+#SBATCH --time=8:00:00
+##SBATCH --qos=scavenger
+#
+#Standard out and error
+#SBATCH --output=%x-%j.SLURMout
+echo "SLURM_NTASKS: $SLURM_NTASKS"
+echo "SLURM_CPUS_ON_NODE: $SLURM_CPUS_ON_NODE"
+echo "JobStarted" `date`""
+
+
+/mnt/home/quanjian/software/Bismark-0.22.3/bismark_genome_preparation --path_to_aligner /mnt/home/quanjian/software/bowtie2-2.4.2/ --verbose /mnt/scratch/quanjian/WGS/orginial_rawdata/fq2gvcf/personalizedGenome/"$sample"/ 2> /mnt/home/quanjian/quan/BS/log/BuildIndex/"$sample".bismark.index.log
+
+
+echo "JobEnd" `date`""

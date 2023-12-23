@@ -1,0 +1,37 @@
+#!/bin/bash
+#BATCH --job-name=bwa_align_pairdReads
+#
+#Tasks per node:
+#SBATCH --ntasks-per-node=1
+#
+#Processors per task:
+#SBATCH --cpus-per-task=6
+#
+#Memory per node:
+#SBATCH --mem=128G
+#
+#
+#Wall time:
+#SBATCH --time=24:00:00
+#
+#Standard out and error
+#SBATCH --output=%x-%j.SLURMout
+
+source "$env"
+
+$BWA mem -t 6 /mnt/scratch/quanjian/ATAC/bwaIndex/"$ref"/"$ref" /mnt/scratch/quanjian/ATAC/preprocess/fastp_filter/"$sample"_R1_out.fastq.gz /mnt/scratch/quanjian/ATAC/preprocess/fastp_filter/"$sample"_R2_out.fastq.gz 2> /mnt/home/quanjian/quan/ATAC/log/alignment/"$sample"_"$ref".align.log|$SAMTOOLS sort --threads 6 -O bam -o /mnt/scratch/quanjian/ATAC/alignment/"$sample"_"$ref".align.bam - > /mnt/home/quanjian/quan/ATAC/log/samtoolSort/"$sample"_"$ref".samsort.log 2>&1
+
+
+##remove the duplication
+java -jar /mnt/research/qgg/software/picard-2.18.2/picard.jar MarkDuplicates \
+I=/mnt/scratch/quanjian/ATAC/alignment/"$sample"_"$ref".align.bam \
+O=/mnt/scratch/quanjian/ATAC/Mod_markduplicate/"$sample"_"$ref".ReDup.bam \
+M=/mnt/scratch/quanjian/ATAC/Mod_markduplicate/"$sample"_"$ref".ReDup.metrics.txt \
+ASSUME_SORTED=true \
+REMOVE_DUPLICATES=true 2> /mnt/home/quanjian/quan/ATAC/log/picard/removeduplication/"$sample"_"$ref".ReDup.bam.log
+
+##remove the reads from mitochondria
+/mnt/research/qgg/software/samtools-1.6/samtools view -h /mnt/scratch/quanjian/ATAC/Mod_markduplicate/"$sample"_"$ref".ReDup.bam |awk '$3!="MT"'|/mnt/research/qgg/software/samtools-1.6/samtools view -bS -F 4 -q 1 > /mnt/scratch/quanjian/ATAC/Mod_markduplicate/"$sample"_"$ref".ReDup.NoMT.bam 2> /mnt/home/quanjian/quan/ATAC/log/picard/removeduplication/"$sample"_"$ref".ReDup.NoMT.bam.log
+
+##remove the reads with low quality or unmapped reads
+/mnt/research/qgg/software/samtools-1.6/samtools view -h /mnt/scratch/quanjian/ATAC/Mod_markduplicate/"$sample"_"$ref".ReDup.bam |awk '$3!="MT"'|/mnt/research/qgg/software/samtools-1.6/samtools view -bS -q 30 -f 2 > /mnt/scratch/quanjian/ATAC/Mod_markduplicate/"$sample"_"$ref".ReDup.NoMT.Unique.bam

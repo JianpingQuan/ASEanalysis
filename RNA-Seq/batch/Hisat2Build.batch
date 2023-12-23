@@ -1,0 +1,19 @@
+#!/bin/bash
+#BATCH --job-name=hisat2_build_with_splicesAndExon
+#
+#Tasks per node:
+#SBATCH --ntasks-per-node=1
+#
+#Processors per task:
+#SBATCH --cpus-per-task=24
+#
+#Memory per node:
+#SBATCH --mem=256G
+#
+#Wall time:
+#SBATCH --time=8:00:00
+#
+#Standard out and error
+#SBATCH --output=%x-%j.SLURMout
+
+/mnt/research/qgg/software/hisat2-2.1.0/hisat2-build -p 24 --ss /mnt/scratch/quanjian/RNA_seq/OriRefIndex/Sscrofa11.ss --exon /mnt/scratch/quanjian/RNA_seq/OriRefIndex/Sscrofa11.exon -f /mnt/home/quanjian/resources/Sus_scrofa.Sscrofa11.1.dna_sm.toplevel.fa /mnt/scratch/quanjian/RNA_seq/OriRefIndex/Sscrofa11

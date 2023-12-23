@@ -1,0 +1,23 @@
+#!/bin/bash
+#BATCH --job-name=bwa_align_pairdReads
+#
+#Tasks per node:
+#SBATCH --ntasks-per-node=1
+#
+#Processors per task:
+#SBATCH --cpus-per-task=6
+#
+#Memory per node:
+#SBATCH --mem=128G
+##SBATCH --qos=scavenger
+#Wall time:
+#SBATCH --time=4:00:00
+#
+#Standard out and error
+#SBATCH --output=%x-%j.SLURMout
+
+
+source /mnt/research/qgg/resource/ase/resource.env
+
+
+$BWA mem -t 6 /mnt/scratch/quanjian/ATAC/bwa_OriRef_index/Sscrofa11.1 /mnt/scratch/quanjian/ATAC/preprocess/fastp_filter/"$sample"_R1_out.fastq.gz /mnt/scratch/quanjian/ATAC/preprocess/fastp_filter/"$sample"_R2_out.fastq.gz 2> /mnt/home/quanjian/quan/ATAC/log/alignment/"$sample"_OriRef.align.log|$SAMTOOLS sort --threads 6 -O bam -o /mnt/scratch/quanjian/ATAC/alignment/OriRef/"$sample"_OriRef.align.bam - > /mnt/home/quanjian/quan/ATAC/log/samtoolSort/"$sample"_OriRef.samsort.log 2>&1

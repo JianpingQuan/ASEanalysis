@@ -1,0 +1,24 @@
+#!/bin/bash
+#BATCH --job-name=statistic_mapping_result
+#
+#Tasks per node:
+#SBATCH --ntasks-per-node=1
+#
+#Processors per task:
+#SBATCH --cpus-per-task=2
+#
+#Memory per node:
+#SBATCH --mem=30G
+#SBATCH --qos=scavenger
+#
+#Wall time:
+#SBATCH --time=3:00:00
+#
+#Standard out and error
+#SBATCH --output=%x-%j.SLURMout
+
+
+
+/mnt/research/qgg/software/samtools-1.6/samtools flagstat /mnt/scratch/quanjian/ATAC/alignment/"$sample"_"$ref".align.bam > /mnt/scratch/quanjian/ATAC/alignment/"$sample"_"$ref".align.bam.stat
+
+/mnt/research/qgg/software/bedtools-2.26.0/bin/bedtools bamtobed -i /mnt/scratch/quanjian/ATAC/alignment/"$sample"_"$ref".align.bam > /mnt/scratch/quanjian/ATAC/alignment/"$sample"_"$ref".align.raw.bed

@@ -1,0 +1,27 @@
+#!/bin/bash
+#BATCH --job-name=bedtoolsIntersect_with_Informative_bed
+#
+#Tasks per node:
+#SBATCH --ntasks-per-node=1
+#
+#Processors per task:
+#SBATCH --cpus-per-task=2
+#
+#Memory per node:
+#SBATCH --mem=64G
+#
+#Wall time:
+#SBATCH --time=4:00:00
+#
+#Standard out and error
+#SBATCH --output=%x-%j.SLURMout
+
+echo "JobStarted" `date`""
+
+cd /mnt/scratch/quanjian/ATAC/atacCount/"$sample"
+
+sort -k1,1 -k2,2 /mnt/scratch/quanjian/ATAC/atacCount/"$sample"/p1.ref.bed|bedtools genomecov -trackline -bg -i - -g  /mnt/ufs18/home-081/quanjian/resources/pig_chromosome_length.txt > "$sample"_"$ref1".bedgraph
+
+sort -k1,1 -k2,2 /mnt/scratch/quanjian/ATAC/atacCount/"$sample"/p2.ref.bed|bedtools genomecov -trackline -bg -i - -g  /mnt/ufs18/home-081/quanjian/resources/pig_chromosome_length.txt > "$sample"_"$ref2".bedgraph
+
+echo "JobEnd" `date`""

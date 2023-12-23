@@ -1,0 +1,28 @@
+#!/bin/bash
+#BATCH --job-name=insertSize_stastics
+#
+#Tasks per node:
+#SBATCH --ntasks-per-node=1
+#
+#Processors per task:
+#SBATCH --cpus-per-task=2
+#
+#Memory per node:
+#SBATCH --mem=40G
+#
+#Wall time:
+#SBATCH --time=2:00:00
+#
+#Standard out and error
+#SBATCH --output=%x-%j.SLURMout
+
+module purge
+module load GCC/9.3.0  OpenMPI/4.0.3 R/4.0.3
+
+java -jar /mnt/research/qgg/software/picard-2.18.2/picard.jar CollectInsertSizeMetrics \
+I=/mnt/scratch/quanjian/ATAC/Ori_markduplicate/BWA_based/"$sample"_OriRef.ReDup.NoMT.Unique.bam \
+O=/mnt/scratch/quanjian/ATAC/analysis/Insertsize/"$sample"_OriRef.InsertSizes.txt \
+H=/mnt/scratch/quanjian/ATAC/analysis/Insertsize/"$sample"_OriRef.InsertSizes.pdf \
+METRIC_ACCUMULATION_LEVEL=ALL_READS 2> /mnt/home/quanjian/quan/ATAC/log/InsertSizes/"$sample"_OriRef.InsertSizes.log
+
+#/mnt/research/qgg/software/samtools-1.6/samtools view /mnt/scratch/quanjian/ATAC/markduplicate/"$sample"_"$ref".ReDup.NoMT.Unique.bam|cut -f9 > /mnt/scratch/quanjian/ATAC/markduplicate/"$sample"_"$ref".InsertSizes.txt
