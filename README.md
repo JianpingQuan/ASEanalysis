@@ -20,3 +20,10 @@ This repository contains analysis pipelines for ASE in pigs, including:
 - Allele-specific methylation analysis
 
 Pipeline components are public available in this repository.
+
+## 3. System requirements
+- Linux: CentOS Linux release 7.9.2009
+- Python: Python 3.6.8
+- Perl: Perl v5.16.3
+- R: R 4.0.3
+
