@@ -167,6 +167,6 @@ enri_pl <- mean(placentaSample)
 
 ##pvalue 
 pvalue_br <- (sum(brainSample>149)+1)/(10000+1)
-pvalue_li <- (sum(liverSample>14)+1)/(10000+1)
+pvalue_li <- (sum(liverSample>15)+1)/(10000+1)
 pvalue_mu <- (sum(muscleSample>35)+1)/(10000+1)
 pvalue_pl <- (sum(placentaSample>100)+1)/(10000+1)
